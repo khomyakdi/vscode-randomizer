@@ -18,14 +18,13 @@ export function activate(context: vscode.ExtensionContext) {
     // The commandId parameter must match the command field in package.json
     let getRandom = vscode.commands.registerCommand('extension.getRandom', () => {
         let editor = vscode.window.activeTextEditor;
+
         if(!editor){
             vscode.window.showInformationMessage("Please open any editor window");
             return;
         };
         let selection = editor.selection;
         let selectionRange = new vscode.Range(selection.start,selection.end);
-        let selectedText = editor.document.getText(selection).trim().replace(/\s+/g,' ');
-        let result;
         let publish = (result:any) => {
             let ed =vscode.window.activeTextEditor;
             function edit(e:TextEditor){
@@ -36,6 +35,15 @@ export function activate(context: vscode.ExtensionContext) {
             }
             edit(ed);
         }
+        if(!selection.isSingleLine){
+            let selectedMultilines = editor.document.getText(selection).split('\n');
+            let lineCount = selectedMultilines.length;
+            publish(selectedMultilines[Randomizer.getRandomNumOnRange(0,lineCount-1)]);
+            return;
+        }
+        let selectedText = editor.document.getText(selection[0]).trim().replace(/\s+/g,' ');
+        let result;
+
         if(selectedText === ""){
             vscode.window.showInformationMessage("Please select some text");
             return;
@@ -50,7 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
                 let range = selectedText.split(' ');
                
                 let cond =(isNaN(+range[0]) || isNaN(+range[1]));
-                console.log(`range ${range}; cond: ${cond} all:${range.length!=2 || cond}`);
+                // console.log(`range ${range}; cond: ${cond} all:${range.length!=2 || cond}`);
                 if (range.length!=2 || cond) {
                     vscode.window.showInformationMessage('Selected text should be "number number" format\n Example: "1 10"' );
                     break;
