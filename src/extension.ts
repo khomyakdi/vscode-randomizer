@@ -62,7 +62,10 @@ export function activate(context: vscode.ExtensionContext) {
                 result = Randomizer.getRandomRGB();
                 publish(result);
             } break;
-
+            case "hex": {
+                result = Randomizer.getRandomHexColor();
+                publish(result);
+            } break;
             default: {
                 let range = selectedText.split(' ');
 
