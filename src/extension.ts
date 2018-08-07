@@ -88,7 +88,7 @@ export function activate(context: vscode.ExtensionContext) {
                     publish(hex);
                 })
                 .catch(()=>{publish(LocalRandom.getRandomHexColor())});
-            }
+            };break;
             default: {
                 let range = selectedText.split(' ');
                 if(range[0]>range[1]){
