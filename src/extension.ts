@@ -51,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
                 if (line.replace(/\s+/g, '') != '')
                     selectedMultilinesWithoutEmpty.push(line);
             });
-            selectedMultilines = selectedMultilinesWithoutEmpty;
+            selectedMultilines = (selectedMultilinesWithoutEmpty.length!=0)?selectedMultilinesWithoutEmpty:[''];
 
             let lineCount = selectedMultilines.length;
            let req = RandomOrg.getRandomNumOnRange(0,lineCount-1);
