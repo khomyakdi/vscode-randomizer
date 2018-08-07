@@ -1,43 +1,63 @@
 {
-    "name": "vscode-randomizer",
-    "displayName": "vscode-randomizer",
-    "description": "vs-code extension for work with random",
-    "version": "0.0.1",
-    "publisher": "khomyakdi",
-    "engines": {
-        "vscode": "^1.25.0"
-    },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:extension.sayHello",
-        "onCommand:extension.getRandom"
-    ],
-    "main": "./out/extension",
-    "contributes": {
-        "commands": [
-            {
-                "command": "extension.sayHello",
-                "title": "Hello World"
-            },
-            {
-                "command": "extension.getRandom",
-                "title": "Get Random"
-            }
-        ]
-    },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.6",
-        "@types/node": "^7.0.43",
-        "@types/mocha": "^2.2.42"
-    }
+  "name": "vscode-randomizer",
+  "displayName": "vscode-randomizer",
+  "description": "vs-code extension for work with random",
+  "version": "0.0.1",
+  "publisher": "khomyakdi",
+  "engines": {
+    "vscode": "^1.25.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:extension.sayHello",
+    "onCommand:extension.getRandom"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.sayHello",
+        "title": "Hello World"
+      },
+      {
+        "command": "extension.getRandom",
+        "title": "Get Random"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^2.6.1",
+    "vscode": "^1.1.6",
+    "@types/node": "^7.0.43",
+    "@types/mocha": "^2.2.42"
+  },
+  "dependencies": {
+    "@types/promise": "^7.1.30",
+    "@types/request": "^2.47.1",
+    "npm": "^6.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khomyakdi/vscode-randomizer.git"
+  },
+  "keywords": [
+    "vscode",
+    "extention",
+    "random"
+  ],
+  "author": "khomyakdi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khomyakdi/vscode-randomizer/issues"
+  },
+  "homepage": "https://github.com/khomyakdi/vscode-randomizer#readme"
 }

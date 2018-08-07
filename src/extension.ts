@@ -3,7 +3,10 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-import { Randomizer } from './randomizer';
+
+import {LocalRandom} from './localRandom';
+import {RandomOrg} from './randomOrg';
+
 import TextEditor = vscode.TextEditor;
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -18,6 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
     let getRandom = vscode.commands.registerCommand('extension.getRandom', () => {
+        let max,min;
         let editor = vscode.window.activeTextEditor;
 
         if (!editor) {
@@ -36,6 +40,9 @@ export function activate(context: vscode.ExtensionContext) {
             }
             edit(ed);
         }
+        let checkRequestTimeout = new Promise((resolve,reject)=> {
+            setTimeout(reject, 800);
+        });
         if (!selection.isSingleLine) {
             let selectedMultilines = editor.document.getText(selection).split('\n');
 
@@ -47,7 +54,10 @@ export function activate(context: vscode.ExtensionContext) {
             selectedMultilines = selectedMultilinesWithoutEmpty;
 
             let lineCount = selectedMultilines.length;
-            publish(selectedMultilines[Randomizer.getRandomNumOnRange(0, lineCount - 1)]);
+           let req = RandomOrg.getRandomNumOnRange(0,lineCount-1);
+           Promise.race([checkRequestTimeout, req])
+            .then((data)=>publish(selectedMultilines[data[0]]))
+            .catch(()=>{publish(selectedMultilines[LocalRandom.getRandomNumOnRange(0,lineCount-1)]);});
             return;
         }
         let selectedText = editor.document.getText(selection).trim().replace(/\s+/g, ' ');
@@ -59,20 +69,45 @@ export function activate(context: vscode.ExtensionContext) {
         }
         switch (selectedText) {
             case "rgb": {
-                result = Randomizer.getRandomRGB();
-                publish(result);
-            } break;
-
+                let req = RandomOrg.getRandomRGB();
+                Promise.race([req,checkRequestTimeout])
+                .then((data)=>{
+                    // console.log(data);
+                    publish(`rgb(${data[0]}, ${data[1]}, ${data[2]})`);
+                })
+                .catch(()=>{publish(LocalRandom.getRandomRGB())});
+               
+            }
+            break;
+            case "hex":{
+                
+                let req = RandomOrg.getRandomHexColor();
+                Promise.race([req,checkRequestTimeout])
+                .then((data)=>{
+                    let hex = `#${data[0]+data[1]+data[2]}`
+                    publish(hex);
+                })
+                .catch(()=>{publish(LocalRandom.getRandomHexColor())});
+            }
             default: {
                 let range = selectedText.split(' ');
-
-                let cond = (isNaN(+range[0]) || isNaN(+range[1]));
+                if(range[0]>range[1]){
+                    max = range[0];
+                    min = range[1];
+                }else{
+                    min = range[0];
+                    max = range[1];
+                }
+                let cond = (isNaN(+min) || isNaN(+max));
                 if (range.length != 2 || cond) {
                     vscode.window.showInformationMessage('Selected text should be like one of the template: "number number" or "rgb" or multiline selection');
                     break;
                 }
-                result = Randomizer.getRandomNumOnRange(parseInt(range[0]), parseInt(range[1]));
-                publish(result);
+
+                let req = RandomOrg.getRandomNumOnRange(parseInt(min), parseInt(max));
+                Promise.race([req,checkRequestTimeout])
+                .then((data)=>publish(data[0]+""))
+                .catch(()=>{publish(LocalRandom.getRandomNumOnRange(parseInt(min), parseInt(max))+"")});;
             } break;
         }
 
